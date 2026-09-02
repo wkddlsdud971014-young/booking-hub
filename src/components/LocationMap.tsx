@@ -1,4 +1,6 @@
-import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { supabase } from '../lib/supabase';
 
 interface Booking {
@@ -16,6 +18,8 @@ export interface LocationMapRef {
 const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const mapRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -27,6 +31,7 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
 
       if (error) throw error;
       setBookings(data || []);
+      updateMapMarkers(data || []);
     } catch (error) {
       console.error('Error fetching bookings:', error);
     } finally {
@@ -34,7 +39,66 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
     }
   };
 
+  const updateMapMarkers = (bookingsList: Booking[]) => {
+    if (!mapRef.current) return;
+
+    // 기존 마커 제거
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+
+    const bookingsWithCoords = bookingsList.filter(b => b.latitude && b.longitude);
+
+    if (bookingsWithCoords.length === 0) return;
+
+    // 새 마커 추가
+    bookingsWithCoords.forEach((booking) => {
+      if (booking.latitude && booking.longitude) {
+        const marker = L.marker([booking.latitude, booking.longitude])
+          .bindPopup(`
+            <div class="p-3">
+              <div class="font-semibold text-black mb-2">${booking.customer}</div>
+              <div class="text-sm text-gray-600">${booking.address}</div>
+              <div class="text-xs text-gray-500 mt-2">
+                📍 ${booking.latitude.toFixed(4)}, ${booking.longitude.toFixed(4)}
+              </div>
+            </div>
+          `)
+          .addTo(mapRef.current!);
+
+        markersRef.current.push(marker);
+      }
+    });
+
+    // 모든 마커가 보이도록 지도 조정
+    if (markersRef.current.length > 0) {
+      const group = new L.featureGroup(markersRef.current);
+      mapRef.current.fitBounds(group.getBounds(), { padding: [50, 50] });
+    }
+  };
+
   useEffect(() => {
+    // 지도 초기화
+    if (!mapRef.current) {
+      mapRef.current = L.map('map').setView([37.5665, 126.9780], 12); // 서울 중심
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(mapRef.current);
+
+      // Leaflet 기본 아이콘 설정
+      const defaultIcon = L.icon({
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+      L.Marker.prototype.options.icon = defaultIcon;
+    }
+
     fetchBookings();
   }, []);
 
@@ -43,51 +107,41 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
   }));
 
   if (loading) {
-    return <div className="text-center py-12 text-gray-500 text-lg">📍 위치 로딩 중...</div>;
+    return <div className="text-center py-12 text-gray-500 text-lg">📍 지도 로딩 중...</div>;
   }
-
-  const bookingsWithCoords = bookings.filter(b => b.latitude && b.longitude);
-
-  if (bookingsWithCoords.length === 0) {
-    return <div className="text-center py-12 text-gray-500 text-lg">📍 위치 정보가 없습니다</div>;
-  }
-
-  // 모든 좌표의 중심점 계산
-  const avgLat = bookingsWithCoords.reduce((sum, b) => sum + (b.latitude || 0), 0) / bookingsWithCoords.length;
-  const avgLon = bookingsWithCoords.reduce((sum, b) => sum + (b.longitude || 0), 0) / bookingsWithCoords.length;
 
   return (
     <div className="space-y-6">
       {/* 지도 */}
-      <div className="rounded-3xl overflow-hidden shadow-sm border border-gray-200" style={{ height: '500px' }}>
-        <iframe
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          loading="lazy"
-          src={`https://www.openstreetmap.org/export/embed.html?bbox=${avgLon - 0.05},${avgLat - 0.05},${avgLon + 0.05},${avgLat + 0.05}&layer=mapnik&marker=${avgLat},${avgLon}`}
-        />
-      </div>
+      <div
+        id="map"
+        className="rounded-3xl overflow-hidden shadow-sm border border-gray-200"
+        style={{ height: '600px' }}
+      />
 
       {/* 예약 위치 목록 */}
       <div>
         <h3 className="text-2xl font-bold text-black mb-6">예약 위치 목록</h3>
         <div className="grid grid-cols-2 gap-4">
-          {bookingsWithCoords.map((booking) => (
-            <a
-              key={booking.id}
-              href={`https://www.openstreetmap.org/?mlat=${booking.latitude}&mlon=${booking.longitude}&zoom=15`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-50 p-6 rounded-2xl border border-gray-200 hover:bg-gray-100 transition"
-            >
-              <div className="font-semibold text-black mb-2">{booking.customer}</div>
-              <div className="text-gray-600 text-sm mb-3">{booking.address}</div>
-              <div className="text-xs text-gray-500">
-                📍 {booking.latitude?.toFixed(4)}, {booking.longitude?.toFixed(4)}
+          {bookings
+            .filter(b => b.latitude && b.longitude)
+            .map((booking) => (
+              <div
+                key={booking.id}
+                className="bg-gray-50 p-6 rounded-2xl border border-gray-200 hover:bg-gray-100 transition cursor-pointer"
+                onClick={() => {
+                  if (mapRef.current && booking.latitude && booking.longitude) {
+                    mapRef.current.setView([booking.latitude, booking.longitude], 16);
+                  }
+                }}
+              >
+                <div className="font-semibold text-black mb-2">{booking.customer}</div>
+                <div className="text-gray-600 text-sm mb-3">{booking.address}</div>
+                <div className="text-xs text-gray-500">
+                  📍 {booking.latitude?.toFixed(4)}, {booking.longitude?.toFixed(4)}
+                </div>
               </div>
-            </a>
-          ))}
+            ))}
         </div>
       </div>
     </div>
