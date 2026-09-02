@@ -40,7 +40,7 @@ export default function App() {
 
   const setupAuthListener = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (_event, session) => {
         if (session?.user?.email) {
           const metadata = session.user.user_metadata;
           setUser({

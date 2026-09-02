@@ -114,53 +114,53 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
   };
 
   if (loading) {
-    return <div className="text-center py-8 text-gray-600">로딩 중...</div>;
+    return <div className="text-center py-12 text-gray-500 text-lg">📊 로딩 중...</div>;
   }
 
   if (bookings.length === 0) {
-    return <div className="text-center py-8 text-gray-600">예약이 없습니다</div>;
+    return <div className="text-center py-16 text-gray-500 text-lg">📭 예약이 없습니다</div>;
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300 table-auto">
+    <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+      <table className="w-full border-collapse table-auto">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-300 px-4 py-2 text-left">고객사</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">서비스</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">날짜</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">시간</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">위치</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">날씨</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">좌표</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">상태</th>
+          <tr className="bg-gradient-to-r from-blue-50 to-blue-100 border-b-2 border-blue-200">
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">고객사</th>
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">서비스</th>
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">날짜</th>
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">시간</th>
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">위치</th>
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">날씨</th>
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">좌표</th>
+            <th className="px-6 py-4 text-left font-semibold text-gray-700 text-sm">상태</th>
           </tr>
         </thead>
         <tbody>
           {bookings.map((booking) => (
-            <tr key={booking.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{booking.customer}</td>
-              <td className="border border-gray-300 px-4 py-2">{booking.service}</td>
-              <td className="border border-gray-300 px-4 py-2">{booking.date}</td>
-              <td className="border border-gray-300 px-4 py-2">{booking.time}</td>
-              <td className="border border-gray-300 px-4 py-2">
+            <tr key={booking.id} className="hover:bg-blue-50 border-b border-gray-200 transition-colors">
+              <td className="px-6 py-4 text-gray-800 font-medium">{booking.customer}</td>
+              <td className="px-6 py-4 text-gray-700">{booking.service}</td>
+              <td className="px-6 py-4 text-gray-700">{booking.date}</td>
+              <td className="px-6 py-4 text-gray-700">{booking.time}</td>
+              <td className="px-6 py-4">
                 {booking.address ? (
                   <a
                     href={getMapLink(booking)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 underline hover:text-blue-800"
+                    className="text-blue-600 font-medium hover:text-blue-800 hover:underline transition-colors"
                   >
                     {booking.address}
                   </a>
                 ) : (
-                  '-'
+                  <span className="text-gray-400">-</span>
                 )}
               </td>
-              <td className="border border-gray-300 px-4 py-2 text-sm">
+              <td className="px-6 py-4 text-center">
                 {weather.get(booking.id) ? (
-                  <div className="text-center">
-                    <div className="text-2xl mb-1">
+                  <div className="bg-blue-50 rounded-lg p-3 inline-block">
+                    <div className="text-3xl mb-2">
                       {weather.get(booking.id)!.icon === '01d' && '☀️'}
                       {weather.get(booking.id)!.icon === '02d' && '⛅'}
                       {weather.get(booking.id)!.icon === '03d' && '☁️'}
@@ -171,32 +171,32 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
                       {weather.get(booking.id)!.icon === '13d' && '❄️'}
                       {!['01d', '02d', '03d', '04d', '09d', '10d', '11d', '13d'].includes(weather.get(booking.id)!.icon) && '🌤️'}
                     </div>
-                    <div className="font-semibold">{weather.get(booking.id)!.temp}°C</div>
+                    <div className="font-bold text-lg text-gray-800">{weather.get(booking.id)!.temp}°C</div>
                   </div>
                 ) : (
                   <span className="text-gray-400">-</span>
                 )}
               </td>
-              <td className="border border-gray-300 px-4 py-2 text-sm">
+              <td className="px-6 py-4">
                 {booking.latitude && booking.longitude ? (
-                  <div className="space-y-1">
-                    <div>📍 {booking.latitude.toFixed(6)}</div>
-                    <div>📍 {booking.longitude.toFixed(6)}</div>
+                  <div className="bg-gray-50 rounded p-2 text-xs space-y-1 font-mono">
+                    <div className="text-gray-600">📍 <span className="text-gray-800 font-semibold">{booking.latitude.toFixed(4)}</span></div>
+                    <div className="text-gray-600">📍 <span className="text-gray-800 font-semibold">{booking.longitude.toFixed(4)}</span></div>
                   </div>
                 ) : (
                   <span className="text-gray-400">-</span>
                 )}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="px-6 py-4">
                 <button
                   onClick={() => toggleStatus(booking.id, booking.status)}
-                  className={`px-3 py-1 rounded text-sm font-semibold cursor-pointer ${
+                  className={`px-4 py-2 rounded-lg text-sm font-bold cursor-pointer transition-all ${
                     booking.status === 'pending'
-                      ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                      : 'bg-green-100 text-green-800 hover:bg-green-200'
+                      ? 'bg-yellow-200 text-yellow-900 hover:bg-yellow-300'
+                      : 'bg-green-200 text-green-900 hover:bg-green-300'
                   }`}
                 >
-                  {booking.status === 'pending' ? '대기' : '확정'}
+                  {booking.status === 'pending' ? '⏳ 대기' : '✅ 확정'}
                 </button>
               </td>
             </tr>

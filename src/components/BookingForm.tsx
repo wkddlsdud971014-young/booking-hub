@@ -107,22 +107,22 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-      <h2 className="text-xl font-bold mb-4">새 예약 추가</h2>
+    <form onSubmit={handleSubmit} className="mb-8 p-8 bg-white rounded-xl border border-blue-200 shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">✏️ 새 예약 추가</h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-800 rounded">
-          {error}
+        <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg border border-red-200 font-medium">
+          ❌ {error}
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-2 gap-5 mb-6">
         <input
           type="text"
           placeholder="고객사"
           value={customer}
           onChange={(e) => setCustomer(e.target.value)}
-          className="border border-gray-300 px-3 py-2 rounded"
+          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
           disabled={loading}
         />
         <input
@@ -130,38 +130,38 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
           placeholder="서비스"
           value={service}
           onChange={(e) => setService(e.target.value)}
-          className="border border-gray-300 px-3 py-2 rounded"
+          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
           disabled={loading}
         />
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="border border-gray-300 px-3 py-2 rounded"
+          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
           disabled={loading}
         />
         <input
           type="time"
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="border border-gray-300 px-3 py-2 rounded"
+          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
           disabled={loading}
         />
       </div>
 
       <input
         type="text"
-        placeholder="주소"
+        placeholder="주소 (예: 서울시 강남구 테헤란로)"
         value={address}
         onChange={(e) => handleAddressChange(e.target.value)}
-        className="w-full border border-gray-300 px-3 py-2 rounded mb-2"
+        className="w-full border-2 border-gray-200 px-4 py-3 rounded-lg mb-3 focus:border-blue-500 focus:outline-none transition-colors"
         disabled={loading}
       />
       {geocodingStatus && (
-        <div className={`mb-4 text-sm p-2 rounded ${
+        <div className={`mb-6 text-sm p-3 rounded-lg border-l-4 font-medium ${
           geocodingStatus.includes('✅')
-            ? 'bg-green-100 text-green-700'
-            : 'bg-red-100 text-red-700'
+            ? 'bg-green-50 text-green-800 border-green-500'
+            : 'bg-red-50 text-red-800 border-red-500'
         }`}>
           {geocodingStatus}
         </div>
@@ -170,9 +170,9 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
       <button
         type="submit"
         disabled={loading || !latitude || !longitude}
-        className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 disabled:bg-gray-400"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-400 transition-all text-lg"
       >
-        {loading ? '추가 중...' : latitude && longitude ? '예약하기' : '주소 검색 완료 후 진행'}
+        {loading ? '⏳ 추가 중...' : latitude && longitude ? '✅ 예약하기' : '📍 주소 검색 완료 후 진행'}
       </button>
     </form>
   );

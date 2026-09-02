@@ -65,18 +65,33 @@ const StatCardsComponent = forwardRef<StatCardsRef>((_, ref) => {
   }));
 
   return (
-    <div className="grid grid-cols-3 gap-4 mb-8">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="text-3xl font-bold text-blue-600">{todayCount}</div>
-        <div className="text-gray-600 text-sm mt-2">오늘 예약</div>
+    <div className="grid grid-cols-3 gap-6 mb-10">
+      <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-shadow">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-5xl font-bold text-blue-600 mb-2">{todayCount}</div>
+            <div className="text-gray-700 font-semibold text-lg">오늘 예약</div>
+          </div>
+          <div className="text-5xl">📅</div>
+        </div>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="text-3xl font-bold text-green-600">{confirmRate}%</div>
-        <div className="text-gray-600 text-sm mt-2">확정률</div>
+      <div className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl border-2 border-green-200 shadow-lg hover:shadow-xl transition-shadow">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-5xl font-bold text-green-600 mb-2">{confirmRate}%</div>
+            <div className="text-gray-700 font-semibold text-lg">확정률</div>
+          </div>
+          <div className="text-5xl">✅</div>
+        </div>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="text-3xl font-bold text-purple-600">{weekCount}</div>
-        <div className="text-gray-600 text-sm mt-2">이번 주 총 건수</div>
+      <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl border-2 border-purple-200 shadow-lg hover:shadow-xl transition-shadow">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-5xl font-bold text-purple-600 mb-2">{weekCount}</div>
+            <div className="text-gray-700 font-semibold text-lg">이번 주 예약</div>
+          </div>
+          <div className="text-5xl">📊</div>
+        </div>
       </div>
     </div>
   );

@@ -30,3 +30,5 @@ dist-ssr
 
 # 개인 API 키. 커밋도 배포도 금지
 .claude/settings.local.json
+.vercel
+.env*
