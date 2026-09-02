@@ -30,13 +30,18 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
         .select('id, customer, address, latitude, longitude')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
       setBookings(data || []);
-      if (mapRef.current) {
-        updateMapMarkers(data || []);
+      if (mapRef.current && data) {
+        updateMapMarkers(data);
       }
     } catch (error) {
       console.error('Error fetching bookings:', error);
+      setBookings([]);
     } finally {
       setLoading(false);
     }

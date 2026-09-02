@@ -79,11 +79,11 @@ export default function App() {
 
   return (
     <div className="pb-24 bg-white min-h-screen">
-      <div className="px-6 py-8 max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-16">
+      <div className="px-8 py-12 max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-12">
           <div>
-            <h1 className="text-5xl font-bold text-black mb-2">예약 관리</h1>
-            <p className="text-gray-600 text-lg">간편하게 모든 예약을 관리하세요</p>
+            <h1 className="text-6xl font-semibold text-black mb-3">예약 관리</h1>
+            <p className="text-gray-600 text-lg">간편하게 모든 예약을 한 곳에서 관리하세요</p>
           </div>
           {user && (
             <div className="flex items-center gap-4 bg-gray-50 px-6 py-4 rounded-2xl">
@@ -158,55 +158,55 @@ export default function App() {
         )}
       </div>
 
-      {/* 하단 탭 바 - Apple 스타일 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-200/50 z-50">
-        <div className="max-w-5xl mx-auto flex justify-between px-6">
+      {/* 하단 탭 바 - Apple 스타일 (단일 파란색 액센트) */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 z-50">
+        <div className="max-w-6xl mx-auto flex justify-between px-8">
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`flex-1 py-6 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 py-5 text-sm font-medium transition-all ${
               activeTab === 'dashboard'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             대시보드
           </button>
           <button
             onClick={() => setActiveTab('list')}
-            className={`flex-1 py-6 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 py-5 text-sm font-medium transition-all ${
               activeTab === 'list'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             목록
           </button>
           <button
             onClick={() => setActiveTab('add')}
-            className={`flex-1 py-6 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 py-5 text-sm font-medium transition-all ${
               activeTab === 'add'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             추가
           </button>
           <button
             onClick={() => setActiveTab('status')}
-            className={`flex-1 py-6 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 py-5 text-sm font-medium transition-all ${
               activeTab === 'status'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            상태
+            날씨
           </button>
           <button
             onClick={() => setActiveTab('location')}
-            className={`flex-1 py-6 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 py-5 text-sm font-medium transition-all ${
               activeTab === 'location'
-                ? 'text-black border-b-2 border-black'
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             위치

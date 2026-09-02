@@ -70,7 +70,7 @@ export function Login({ onLoginSuccess }: LoginProps) {
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full bg-black text-white py-5 rounded-2xl font-semibold hover:bg-gray-900 transition disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70 flex items-center justify-center gap-3 mb-8"
+          className="w-full bg-blue-600 text-white py-5 rounded-full font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70 flex items-center justify-center gap-3 mb-8"
         >
           <svg className="w-6 h-6" viewBox="0 0 24 24">
             <path

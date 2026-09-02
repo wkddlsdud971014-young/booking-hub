@@ -186,7 +186,7 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
       <button
         type="submit"
         disabled={loading || !latitude || !longitude}
-        className="w-full bg-black text-white py-5 rounded-2xl font-bold hover:bg-gray-900 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all text-lg"
+        className="w-full bg-blue-600 text-white py-5 rounded-full font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all text-base"
       >
         {loading ? '추가 중...' : latitude && longitude ? '예약하기' : '주소를 먼저 확인해주세요'}
       </button>
