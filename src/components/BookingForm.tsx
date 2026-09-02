@@ -158,8 +158,6 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
             className="w-full border border-gray-300 px-5 py-4 rounded-xl bg-white focus:border-black focus:outline-none transition-colors text-lg"
             disabled={loading}
           />
-      </div>
-
         </div>
       </div>
 
