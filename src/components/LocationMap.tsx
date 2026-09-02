@@ -85,7 +85,12 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
   };
 
   useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return;
+    if (!mapContainerRef.current) return;
+
+    if (mapRef.current) {
+      fetchBookings();
+      return;
+    }
 
     try {
       mapRef.current = L.map(mapContainerRef.current).setView([37.5665, 126.9780], 12);
@@ -109,14 +114,8 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
       fetchBookings();
     } catch (error) {
       console.error('Map error:', error);
+      setLoading(false);
     }
-
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
-    };
   }, []);
 
   useImperativeHandle(ref, () => ({
