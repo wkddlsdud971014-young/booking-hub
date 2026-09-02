@@ -15,6 +15,13 @@ interface Booking {
   longitude?: number | null;
 }
 
+interface WeatherInfo {
+  bookingId: number;
+  temp: number;
+  description: string;
+  icon: string;
+}
+
 export interface BookingTableRef {
   refresh: () => void;
   setOnStatusChange?: (callback: () => void) => void;
@@ -27,6 +34,32 @@ interface BookingTableProps {
 const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ onStatusChange }, ref) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [weather, setWeather] = useState<Map<number, WeatherInfo>>(new Map());
+  const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+
+  const fetchWeather = async (booking: Booking) => {
+    if (!booking.latitude || !booking.longitude || !apiKey) return;
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${booking.latitude}&lon=${booking.longitude}&appid=${apiKey}&units=metric`
+      );
+      const data = await response.json();
+
+      if (data.main) {
+        setWeather((prev) =>
+          new Map(prev).set(booking.id, {
+            bookingId: booking.id,
+            temp: Math.round(data.main.temp),
+            description: data.weather[0].main,
+            icon: data.weather[0].icon,
+          })
+        );
+      }
+    } catch (error) {
+      console.error('Error fetching weather:', error);
+    }
+  };
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -38,6 +71,7 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
 
       if (error) throw error;
       setBookings(data || []);
+      data?.forEach((booking) => fetchWeather(booking));
     } catch (error) {
       console.error('Error fetching bookings:', error);
     } finally {
@@ -97,6 +131,7 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
             <th className="border border-gray-300 px-4 py-2 text-left">날짜</th>
             <th className="border border-gray-300 px-4 py-2 text-left">시간</th>
             <th className="border border-gray-300 px-4 py-2 text-left">위치</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">날씨</th>
             <th className="border border-gray-300 px-4 py-2 text-left">좌표</th>
             <th className="border border-gray-300 px-4 py-2 text-left">상태</th>
           </tr>
@@ -120,6 +155,26 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
                   </a>
                 ) : (
                   '-'
+                )}
+              </td>
+              <td className="border border-gray-300 px-4 py-2 text-sm">
+                {weather.get(booking.id) ? (
+                  <div className="text-center">
+                    <div className="text-2xl mb-1">
+                      {weather.get(booking.id)!.icon === '01d' && '☀️'}
+                      {weather.get(booking.id)!.icon === '02d' && '⛅'}
+                      {weather.get(booking.id)!.icon === '03d' && '☁️'}
+                      {weather.get(booking.id)!.icon === '04d' && '☁️'}
+                      {weather.get(booking.id)!.icon === '09d' && '🌧️'}
+                      {weather.get(booking.id)!.icon === '10d' && '🌧️'}
+                      {weather.get(booking.id)!.icon === '11d' && '⛈️'}
+                      {weather.get(booking.id)!.icon === '13d' && '❄️'}
+                      {!['01d', '02d', '03d', '04d', '09d', '10d', '11d', '13d'].includes(weather.get(booking.id)!.icon) && '🌤️'}
+                    </div>
+                    <div className="font-semibold">{weather.get(booking.id)!.temp}°C</div>
+                  </div>
+                ) : (
+                  <span className="text-gray-400">-</span>
                 )}
               </td>
               <td className="border border-gray-300 px-4 py-2 text-sm">
