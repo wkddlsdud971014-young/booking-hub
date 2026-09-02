@@ -3,6 +3,8 @@ import { BookingTable, type BookingTableRef } from './components/BookingTable';
 import { BookingForm } from './components/BookingForm';
 import { StatCards, type StatCardsRef } from './components/StatCards';
 import { Login } from './components/Login';
+import { LocationMap, type LocationMapRef } from './components/LocationMap';
+import { WeatherView, type WeatherViewRef } from './components/WeatherView';
 import { supabase } from './lib/supabase';
 
 type Tab = 'dashboard' | 'list' | 'add' | 'status' | 'location';
@@ -19,6 +21,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const tableRef = useRef<BookingTableRef>(null);
   const statsRef = useRef<StatCardsRef>(null);
+  const locationMapRef = useRef<LocationMapRef>(null);
+  const weatherViewRef = useRef<WeatherViewRef>(null);
 
   useEffect(() => {
     checkAuth();
@@ -135,59 +139,21 @@ export default function App() {
           </div>
         )}
 
-        {/* 상태관리 탭 */}
+        {/* 상태관리 탭 - 날씨 */}
         {activeTab === 'status' && (
           <div>
-            <h2 className="text-3xl font-bold text-black mb-4">상태 관리</h2>
-            <p className="text-gray-600 text-lg mb-10">예약 상태를 한눈에 파악하세요</p>
-
-            <div className="grid grid-cols-2 gap-4 mb-10">
-              <div className="bg-gray-50 rounded-2xl p-8 text-center">
-                <div className="text-5xl font-bold text-black mb-3">⏳</div>
-                <div className="text-4xl font-bold text-black mb-1">대기 중</div>
-                <div className="text-gray-600">확정 대기 예약</div>
-              </div>
-              <div className="bg-gray-50 rounded-2xl p-8 text-center">
-                <div className="text-5xl font-bold text-black mb-3">✅</div>
-                <div className="text-4xl font-bold text-black mb-1">확정됨</div>
-                <div className="text-gray-600">확정된 예약</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-              <p className="text-gray-700 text-lg">
-                아래 예약 목록에서 상태를 클릭하면 <span className="font-semibold">대기</span>와 <span className="font-semibold">확정</span>을 전환할 수 있습니다.
-              </p>
-            </div>
-            <BookingTable ref={tableRef} onStatusChange={() => statsRef.current?.refresh()} />
+            <h2 className="text-3xl font-bold text-black mb-4">예약 날씨</h2>
+            <p className="text-gray-600 text-lg mb-10">각 예약 날짜의 날씨를 미리 확인하세요</p>
+            <WeatherView ref={weatherViewRef} />
           </div>
         )}
 
-        {/* 위치확인 탭 */}
+        {/* 위치확인 탭 - 지도 */}
         {activeTab === 'location' && (
           <div>
-            <h2 className="text-3xl font-bold text-black mb-4">위치 확인</h2>
-            <p className="text-gray-600 text-lg mb-10">모든 예약의 위치를 확인하세요</p>
-
-            <div className="grid grid-cols-2 gap-4 mb-10">
-              <div className="bg-gray-50 rounded-2xl p-8 text-center">
-                <div className="text-5xl font-bold text-black mb-3">🗺️</div>
-                <div className="text-2xl font-bold text-black mb-1">지도 보기</div>
-                <div className="text-gray-600">주소 클릭 시</div>
-              </div>
-              <div className="bg-gray-50 rounded-2xl p-8 text-center">
-                <div className="text-5xl font-bold text-black mb-3">📍</div>
-                <div className="text-2xl font-bold text-black mb-1">좌표 확인</div>
-                <div className="text-gray-600">위도/경도 표시</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-              <p className="text-gray-700 text-lg">
-                위치 열의 주소를 클릭하면 OpenStreetMap에서 위치를 확인할 수 있고, 좌표 열에서는 정확한 위도/경도를 볼 수 있습니다.
-              </p>
-            </div>
-            <BookingTable ref={tableRef} onStatusChange={() => statsRef.current?.refresh()} />
+            <h2 className="text-3xl font-bold text-black mb-4">예약 위치</h2>
+            <p className="text-gray-600 text-lg mb-10">지도에서 모든 예약 위치를 확인하세요</p>
+            <LocationMap ref={locationMapRef} />
           </div>
         )}
       </div>
