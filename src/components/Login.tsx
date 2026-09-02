@@ -54,23 +54,26 @@ export function Login({ onLoginSuccess }: LoginProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-3xl font-bold text-center mb-2 text-blue-600">예약 관리 허브</h1>
-        <p className="text-center text-gray-600 mb-8">Google 로그인으로 시작하세요</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-12">
+          <div className="text-6xl mb-4">📅</div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">예약 관리 허브</h1>
+          <p className="text-gray-500 text-lg">Google 계정으로 로그인하세요</p>
+        </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-lg text-sm">
-            {error}
+          <div className="mb-8 p-5 bg-red-50 text-red-700 rounded-xl border border-red-200 text-sm font-medium">
+            ❌ {error}
           </div>
         )}
 
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full bg-white border-2 border-gray-300 py-3 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition disabled:bg-gray-100 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+          className="w-full bg-white border-2 border-gray-300 py-4 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-3 mb-6"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" viewBox="0 0 24 24">
             <path
               fill="currentColor"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -91,8 +94,10 @@ export function Login({ onLoginSuccess }: LoginProps) {
           {loading ? '로그인 중...' : 'Google로 로그인'}
         </button>
 
-        <p className="text-center text-gray-500 text-xs mt-6">
-          관리자 이메일로만 접근 가능합니다
+        <p className="text-center text-gray-500 text-sm">
+          <span className="inline-block bg-gray-200 rounded-full px-4 py-2">
+            🔒 관리자만 접근 가능
+          </span>
         </p>
       </div>
     </div>
