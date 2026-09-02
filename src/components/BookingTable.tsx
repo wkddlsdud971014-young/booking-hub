@@ -71,9 +71,12 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
     }
   };
 
-  const getMapLink = (address: string | undefined) => {
-    if (!address) return '#';
-    return `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+  const getMapLink = (booking: Booking) => {
+    if (booking.latitude && booking.longitude) {
+      return `https://www.openstreetmap.org/?mlat=${booking.latitude}&mlon=${booking.longitude}&zoom=15`;
+    }
+    if (!booking.address) return '#';
+    return `https://www.openstreetmap.org/search?query=${encodeURIComponent(booking.address)}`;
   };
 
   if (loading) {
@@ -107,7 +110,7 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
               <td className="border border-gray-300 px-4 py-2">
                 {booking.address ? (
                   <a
-                    href={getMapLink(booking.address as string)}
+                    href={getMapLink(booking)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline hover:text-blue-800"
