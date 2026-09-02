@@ -11,8 +11,47 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [address, setAddress] = useState('');
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [geocodingStatus, setGeocodingStatus] = useState<string>('');
+
+  const geocodeAddress = async (addr: string) => {
+    try {
+      setGeocodingStatus('위치 검색 중...');
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`,
+        { headers: { 'User-Agent': 'booking-hub' } }
+      );
+      const data = await response.json();
+
+      if (data.length > 0) {
+        setLatitude(parseFloat(data[0].lat));
+        setLongitude(parseFloat(data[0].lon));
+        setGeocodingStatus(`✅ 위치 검색 완료: ${data[0].display_name}`);
+      } else {
+        setGeocodingStatus('❌ 주소를 찾을 수 없습니다');
+        setLatitude(null);
+        setLongitude(null);
+      }
+    } catch (err) {
+      setGeocodingStatus('❌ 위치 검색 실패');
+      setLatitude(null);
+      setLongitude(null);
+    }
+  };
+
+  const handleAddressChange = (value: string) => {
+    setAddress(value);
+    if (value.length > 5) {
+      geocodeAddress(value);
+    } else {
+      setGeocodingStatus('');
+      setLatitude(null);
+      setLongitude(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +72,8 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
           date,
           time,
           address,
+          latitude,
+          longitude,
           via: 'form',
         });
 
@@ -43,6 +84,9 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
       setDate('');
       setTime('');
       setAddress('');
+      setLatitude(null);
+      setLongitude(null);
+      setGeocodingStatus('');
 
       if (onSuccess) {
         onSuccess();
@@ -101,10 +145,15 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
         type="text"
         placeholder="주소"
         value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        className="w-full border border-gray-300 px-3 py-2 rounded mb-4"
+        onChange={(e) => handleAddressChange(e.target.value)}
+        className="w-full border border-gray-300 px-3 py-2 rounded mb-2"
         disabled={loading}
       />
+      {geocodingStatus && (
+        <div className="mb-4 text-sm text-gray-600">
+          {geocodingStatus}
+        </div>
+      )}
 
       <button
         type="submit"

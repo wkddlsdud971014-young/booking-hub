@@ -11,6 +11,8 @@ interface Booking {
   status: string;
   via: string;
   created_at: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface BookingTableRef {
@@ -69,8 +71,8 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
     }
   };
 
-  const getMapLink = (address: string) => {
-    if (!address) return null;
+  const getMapLink = (address: string | undefined) => {
+    if (!address) return '#';
     return `https://maps.google.com/?q=${encodeURIComponent(address)}`;
   };
 
@@ -105,7 +107,7 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
               <td className="border border-gray-300 px-4 py-2">
                 {booking.address ? (
                   <a
-                    href={getMapLink(booking.address)}
+                    href={getMapLink(booking.address as string)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline hover:text-blue-800"
