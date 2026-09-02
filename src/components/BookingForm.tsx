@@ -17,7 +17,7 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [geocodingStatus, setGeocodingStatus] = useState<string>('');
 
-  const geocodeAddress = async (addr: string) => {
+  const geocodeAddress = async (addr: string): Promise<boolean> => {
     try {
       setGeocodingStatus('위치 검색 중...');
       const response = await fetch(
@@ -30,15 +30,18 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
         setLatitude(parseFloat(data[0].lat));
         setLongitude(parseFloat(data[0].lon));
         setGeocodingStatus(`✅ 위치 검색 완료: ${data[0].display_name}`);
+        return true;
       } else {
         setGeocodingStatus('❌ 주소를 찾을 수 없습니다');
         setLatitude(null);
         setLongitude(null);
+        return false;
       }
     } catch (err) {
       setGeocodingStatus('❌ 위치 검색 실패');
       setLatitude(null);
       setLongitude(null);
+      return false;
     }
   };
 
@@ -59,6 +62,11 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
 
     if (!customer || !service || !date || !time || !address) {
       setError('모든 필드를 입력해주세요');
+      return;
+    }
+
+    if (!latitude || !longitude) {
+      setError('유효한 주소를 선택해주세요. 주소 검색이 완료될 때까지 기다려주세요.');
       return;
     }
 
@@ -150,17 +158,21 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
         disabled={loading}
       />
       {geocodingStatus && (
-        <div className="mb-4 text-sm text-gray-600">
+        <div className={`mb-4 text-sm p-2 rounded ${
+          geocodingStatus.includes('✅')
+            ? 'bg-green-100 text-green-700'
+            : 'bg-red-100 text-red-700'
+        }`}>
           {geocodingStatus}
         </div>
       )}
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !latitude || !longitude}
         className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 disabled:bg-gray-400"
       >
-        {loading ? '추가 중...' : '예약하기'}
+        {loading ? '추가 중...' : latitude && longitude ? '예약하기' : '주소 검색 완료 후 진행'}
       </button>
     </form>
   );
