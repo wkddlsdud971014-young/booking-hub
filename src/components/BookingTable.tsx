@@ -97,6 +97,7 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
             <th className="border border-gray-300 px-4 py-2 text-left">날짜</th>
             <th className="border border-gray-300 px-4 py-2 text-left">시간</th>
             <th className="border border-gray-300 px-4 py-2 text-left">위치</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">좌표</th>
             <th className="border border-gray-300 px-4 py-2 text-left">상태</th>
           </tr>
         </thead>
@@ -119,6 +120,16 @@ const BookingTableComponent = forwardRef<BookingTableRef, BookingTableProps>(({ 
                   </a>
                 ) : (
                   '-'
+                )}
+              </td>
+              <td className="border border-gray-300 px-4 py-2 text-sm">
+                {booking.latitude && booking.longitude ? (
+                  <div className="space-y-1">
+                    <div>📍 {booking.latitude.toFixed(6)}</div>
+                    <div>📍 {booking.longitude.toFixed(6)}</div>
+                  </div>
+                ) : (
+                  <span className="text-gray-400">-</span>
                 )}
               </td>
               <td className="border border-gray-300 px-4 py-2">
