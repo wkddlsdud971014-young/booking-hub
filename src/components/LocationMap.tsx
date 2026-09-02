@@ -77,26 +77,40 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
   };
 
   useEffect(() => {
+    // DOM이 준비될 때까지 기다리기
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) {
+      console.log('Map container not ready, retrying...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      return;
+    }
+
     // 지도 초기화
     if (!mapRef.current) {
-      mapRef.current = L.map('map').setView([37.5665, 126.9780], 12); // 서울 중심
+      try {
+        mapRef.current = L.map('map').setView([37.5665, 126.9780], 12); // 서울 중심
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19,
-      }).addTo(mapRef.current);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 19,
+        }).addTo(mapRef.current);
 
-      // Leaflet 기본 아이콘 설정
-      const defaultIcon = L.icon({
-        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
-      });
-      L.Marker.prototype.options.icon = defaultIcon;
+        // Leaflet 기본 아이콘 설정
+        const defaultIcon = L.icon({
+          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        });
+        L.Marker.prototype.options.icon = defaultIcon;
+      } catch (error) {
+        console.error('Map initialization error:', error);
+      }
     }
 
     fetchBookings();
