@@ -65,33 +65,21 @@ const StatCardsComponent = forwardRef<StatCardsRef>((_, ref) => {
   }));
 
   return (
-    <div className="grid grid-cols-3 gap-6 mb-10">
-      <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-shadow">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-5xl font-bold text-blue-600 mb-2">{todayCount}</div>
-            <div className="text-gray-700 font-semibold text-lg">오늘 예약</div>
-          </div>
-          <div className="text-5xl">📅</div>
-        </div>
+    <div className="grid grid-cols-3 gap-5 mb-12">
+      <div className="bg-gray-50 p-8 rounded-3xl border border-gray-200">
+        <div className="text-gray-600 text-sm font-semibold mb-3">오늘 예약</div>
+        <div className="text-6xl font-bold text-black mb-2">{todayCount}</div>
+        <div className="text-gray-500 text-sm">건</div>
       </div>
-      <div className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl border-2 border-green-200 shadow-lg hover:shadow-xl transition-shadow">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-5xl font-bold text-green-600 mb-2">{confirmRate}%</div>
-            <div className="text-gray-700 font-semibold text-lg">확정률</div>
-          </div>
-          <div className="text-5xl">✅</div>
-        </div>
+      <div className="bg-gray-50 p-8 rounded-3xl border border-gray-200">
+        <div className="text-gray-600 text-sm font-semibold mb-3">확정률</div>
+        <div className="text-6xl font-bold text-black mb-2">{confirmRate}%</div>
+        <div className="text-gray-500 text-sm">확정됨</div>
       </div>
-      <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl border-2 border-purple-200 shadow-lg hover:shadow-xl transition-shadow">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-5xl font-bold text-purple-600 mb-2">{weekCount}</div>
-            <div className="text-gray-700 font-semibold text-lg">이번 주 예약</div>
-          </div>
-          <div className="text-5xl">📊</div>
-        </div>
+      <div className="bg-gray-50 p-8 rounded-3xl border border-gray-200">
+        <div className="text-gray-600 text-sm font-semibold mb-3">이번 주 예약</div>
+        <div className="text-6xl font-bold text-black mb-2">{weekCount}</div>
+        <div className="text-gray-500 text-sm">월-금</div>
       </div>
     </div>
   );

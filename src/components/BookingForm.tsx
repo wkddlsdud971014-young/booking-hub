@@ -107,58 +107,76 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-8 bg-white rounded-xl border border-blue-200 shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">✏️ 새 예약 추가</h2>
+    <form onSubmit={handleSubmit} className="mb-8 p-10 bg-gray-50 rounded-3xl">
+      <h2 className="text-3xl font-bold mb-8 text-black">새로운 예약을 추가하세요</h2>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg border border-red-200 font-medium">
-          ❌ {error}
+        <div className="mb-8 p-5 bg-red-50 text-red-700 rounded-2xl border border-red-200 font-medium text-lg">
+          {error}
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-5 mb-6">
+        <div>
+          <label className="block text-sm font-semibold text-black mb-3">고객사</label>
+          <input
+            type="text"
+            placeholder="예: ABC 회사"
+            value={customer}
+            onChange={(e) => setCustomer(e.target.value)}
+            className="w-full border border-gray-300 px-5 py-4 rounded-xl bg-white focus:border-black focus:outline-none transition-colors text-lg"
+            disabled={loading}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-black mb-3">서비스</label>
+          <input
+            type="text"
+            placeholder="예: 컨설팅"
+            value={service}
+            onChange={(e) => setService(e.target.value)}
+            className="w-full border border-gray-300 px-5 py-4 rounded-xl bg-white focus:border-black focus:outline-none transition-colors text-lg"
+            disabled={loading}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-black mb-3">날짜</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full border border-gray-300 px-5 py-4 rounded-xl bg-white focus:border-black focus:outline-none transition-colors text-lg"
+            disabled={loading}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-black mb-3">시간</label>
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="w-full border border-gray-300 px-5 py-4 rounded-xl bg-white focus:border-black focus:outline-none transition-colors text-lg"
+            disabled={loading}
+          />
+      </div>
+
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <label className="block text-sm font-semibold text-black mb-3">주소</label>
         <input
           type="text"
-          placeholder="고객사"
-          value={customer}
-          onChange={(e) => setCustomer(e.target.value)}
-          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-          disabled={loading}
-        />
-        <input
-          type="text"
-          placeholder="서비스"
-          value={service}
-          onChange={(e) => setService(e.target.value)}
-          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-          disabled={loading}
-        />
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-          disabled={loading}
-        />
-        <input
-          type="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          className="border-2 border-gray-200 px-4 py-3 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+          placeholder="예: 서울시 강남구 테헤란로 123"
+          value={address}
+          onChange={(e) => handleAddressChange(e.target.value)}
+          className="w-full border border-gray-300 px-5 py-4 rounded-xl bg-white focus:border-black focus:outline-none transition-colors text-lg"
           disabled={loading}
         />
       </div>
 
-      <input
-        type="text"
-        placeholder="주소 (예: 서울시 강남구 테헤란로)"
-        value={address}
-        onChange={(e) => handleAddressChange(e.target.value)}
-        className="w-full border-2 border-gray-200 px-4 py-3 rounded-lg mb-3 focus:border-blue-500 focus:outline-none transition-colors"
-        disabled={loading}
-      />
       {geocodingStatus && (
-        <div className={`mb-6 text-sm p-3 rounded-lg border-l-4 font-medium ${
+        <div className={`mb-8 p-5 rounded-2xl font-medium text-lg border-l-4 ${
           geocodingStatus.includes('✅')
             ? 'bg-green-50 text-green-800 border-green-500'
             : 'bg-red-50 text-red-800 border-red-500'
@@ -170,9 +188,9 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
       <button
         type="submit"
         disabled={loading || !latitude || !longitude}
-        className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-400 transition-all text-lg"
+        className="w-full bg-black text-white py-5 rounded-2xl font-bold hover:bg-gray-900 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all text-lg"
       >
-        {loading ? '⏳ 추가 중...' : latitude && longitude ? '✅ 예약하기' : '📍 주소 검색 완료 후 진행'}
+        {loading ? '추가 중...' : latitude && longitude ? '예약하기' : '주소를 먼저 확인해주세요'}
       </button>
     </form>
   );
