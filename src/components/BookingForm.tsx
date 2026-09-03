@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { addEventToCalendar } from '../lib/googleCalendar';
 
 interface BookingFormProps {
   onSuccess?: () => void;
@@ -86,6 +87,24 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
         });
 
       if (insertError) throw insertError;
+
+      // Google Calendar에 이벤트 추가 (선택사항 - 실패해도 booking은 유지)
+      const dateTime = new Date(`${date}T${time}`);
+      const endTime = new Date(dateTime.getTime() + 60 * 60 * 1000); // 1시간 예약
+
+      await addEventToCalendar({
+        summary: `${customer} - ${service}`,
+        description: `주소: ${address}\n고객: ${customer}\n서비스: ${service}`,
+        start: {
+          dateTime: dateTime.toISOString(),
+          timeZone: 'Asia/Seoul',
+        },
+        end: {
+          dateTime: endTime.toISOString(),
+          timeZone: 'Asia/Seoul',
+        },
+        location: address,
+      });
 
       setCustomer('');
       setService('');
