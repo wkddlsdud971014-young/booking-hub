@@ -79,7 +79,7 @@ const LocationMapComponent = forwardRef<LocationMapRef>((_, ref) => {
 
     // 모든 마커가 보이도록 지도 조정
     if (markersRef.current.length > 0) {
-      const group = new L.featureGroup(markersRef.current);
+      const group = L.featureGroup(markersRef.current);
       mapRef.current.fitBounds(group.getBounds(), { padding: [50, 50] });
     }
   };
